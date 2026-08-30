@@ -1,0 +1,8 @@
+variable,skew,shapiro_W,shapiro_p,normal_at_0.05
+Population,2.69,0.652,0.0,no
+Median Household Income,0.34,0.978,0.2939,yes
+Poverty Rate,0.61,0.951,0.0098,no
+Median Age,1.01,0.946,0.0058,no
+Pct Bachelors Or Higher,0.25,0.952,0.012,no
+Unemployment Rate,0.49,0.978,0.2932,yes
+Pct Renter Occupied,0.99,0.93,0.001,no
