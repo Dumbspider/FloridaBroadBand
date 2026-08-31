@@ -1,28 +1,9 @@
-"""
-03_build_index.py  —  Build the county mobile-broadband priority index.
-
-Inputs (both next to this script):
-  acs_features.csv        from 01_pull_acs.py
-  coverage_by_county.csv  from 02_process_coverage.py
-
-Output:
-  priority_ranking.csv    ranked 67 counties
-  weight_sensitivity.csv  top-10 under different weight choices
-
-Formula:
-  coverage_gap    = 1 - covered_share
-  unserved_people = coverage_gap * population            (demand-weighted backbone)
-  gap_score       = minmax(unserved_people)
-  need_score      = minmax( minmax(poverty) + minmax(-income) + minmax(age) )   (equity tilt)
-  priority        = W_GAP * gap_score + W_NEED * need_score
-Weights are explicit assumptions, swept below as a robustness check.
-"""
 from pathlib import Path
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 W_GAP, W_NEED = 0.7, 0.3
-LOG_POPULATION = False   # set True to log-compress metro population skew (log the choice!)
+LOG_POPULATION = False
 
 
 def minmax(s):
@@ -63,7 +44,6 @@ def main():
     print(ranked[["rank", "NAME", "priority", "unserved_people", "coverage_gap"]]
           .head(15).to_string(index=False))
 
-    # --- weight sensitivity: does the top-10 hold up? ---
     rows = []
     for wg in [0.9, 0.7, 0.5, 0.3]:
         top10 = score(df, wg, round(1 - wg, 1)).head(10)["NAME"].tolist()
