@@ -9,7 +9,7 @@ features = ["Population", "Median Household Income", "Poverty Rate", "Median Age
 df[features].hist(bins=15, figsize=(12, 8))
 plt.tight_layout()
 plt.savefig("feature_distributions.png", dpi=150)
-plt.show()   # <-- this opens the interactive window
+plt.show()
 
 for f in features:                       
     s = df[f].dropna()
