@@ -1,11 +1,3 @@
-"""
-08_distributions.py  —  distribution diagnostics for the independent variables:
-a histogram (with a normal curve overlaid) and a Q-Q plot side by side per
-variable, plus a Shapiro-Wilk table.
-
-Run next to acs_features.csv.
-Outputs: distributions_grid.png, qq_grid.png, normality_table.csv
-"""
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -21,7 +13,6 @@ def main():
     df = pd.read_csv(HERE / "acs_features.csv")
     feats = [f for f in FEATURES if f in df.columns]
 
-    # ---------- Shapiro-Wilk table ----------
     rows = []
     for f in feats:
         s = df[f].dropna()
@@ -36,7 +27,6 @@ def main():
     ncols = 3
     nrows = int(np.ceil(n / ncols))
 
-    # ---------- histogram grid (with normal overlay) ----------
     fig, axes = plt.subplots(nrows, ncols, figsize=(4 * ncols, 3.2 * nrows))
     axes = np.array(axes).ravel()
     for ax, f in zip(axes, feats):
@@ -53,14 +43,13 @@ def main():
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     fig.savefig(HERE / "distributions_grid.png", dpi=200, bbox_inches="tight")
 
-    # ---------- Q-Q plot grid ----------
     fig2, axes2 = plt.subplots(nrows, ncols, figsize=(4 * ncols, 3.2 * nrows))
     axes2 = np.array(axes2).ravel()
     for ax, f in zip(axes2, feats):
         s = df[f].dropna()
         stats.probplot(s, dist="norm", plot=ax)
         ax.get_lines()[0].set(marker="o", markersize=4, markerfacecolor="#4c72b0", markeredgecolor="none")
-        ax.get_lines()[1].set(color="red", lw=1.5)   # the reference line
+        ax.get_lines()[1].set(color="red", lw=1.5)
         ax.set_title(f, fontsize=9)
         ax.set_xlabel("Theoretical quantiles", fontsize=8)
         ax.set_ylabel("Sample quantiles", fontsize=8)
