@@ -1,37 +1,15 @@
-"""
-02_process_coverage.py  —  FCC mobile coverage -> coverage gap per FL county.
-
-Reads the FCC "Mobile Broadband Summary by Geography Type" (County) file and
-produces the project's DEPENDENT VARIABLE inputs, one row per county.
-
-Output: coverage_by_county.csv  with
-  GEO_ID            0500000US12XXX  (matches acs_features.csv)
-  covered_share     primary coverage definition (5G-NR 7/1 Mbps, outdoor)
-  covered_share_4g  sensitivity definition (4G LTE 5/1 Mbps, outdoor)
-  coverage_gap      1 - covered_share   (DV; multiply by Population in step 03)
-
-Coverage-definition decision (LOG THIS in RESEARCH_LOG.md):
-  primary  = mobilebb_5g_spd1_area_st_pct  (5G-NR 7/1 Mbps, stationary/outdoor)
-  sensitivity = mobilebb_4g_area_st_pct    (4G LTE 5/1 Mbps, stationary/outdoor)
-  st = stationary (outdoor); iv = in-vehicle (moving). We use stationary.
-LIMITATION: these are AREA-based coverage %, not population-based. unserved_people
-  = coverage_gap * population assumes residents are spread evenly across county
-  area. Defensible at county grain; state it explicitly in methods.
-"""
 from pathlib import Path
 import pandas as pd
 
 RAW = Path(__file__).resolve().parent / "bdc_us_mobile_broadband_summary_by_geography_D25_23jun2026.csv"
 
-PRIMARY = "mobilebb_5g_spd1_area_st_pct"   # 5G-NR 7/1 Mbps, outdoor
-SENSITIVITY = "mobilebb_4g_area_st_pct"    # 4G LTE 5/1 Mbps, outdoor
+PRIMARY = "mobilebb_5g_spd1_area_st_pct"
+SENSITIVITY = "mobilebb_4g_area_st_pct"
 
 
 def main():
     df = pd.read_csv(RAW, dtype=str)
 
-    # Florida counties, whole-county figure only (area_data_type == 'Total').
-    # Filter on FIPS 12 — NOT the name 'Florida' (which would catch PR's Florida Municipio).
     m = ((df["geography_type"] == "County")
          & (df["geography_id"].str.startswith("12"))
          & (df["area_data_type"] == "Total"))
