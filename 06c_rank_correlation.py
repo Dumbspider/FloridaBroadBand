@@ -1,11 +1,3 @@
-"""
-06c_rank_correlation.py — clean weight-sensitivity summary using Spearman rank
-correlation. Each bar = how closely that weighting's ranking matches the baseline
-(0.7/0.3). Bar near 1.0 = ranking barely changes; lower = bigger reshuffle.
-
-Run next to acs_features.csv and coverage_by_county.csv.
-Outputs: rank_correlation.png, rank_correlation.csv
-"""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from scipy import stats
